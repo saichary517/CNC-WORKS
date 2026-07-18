@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-color: #F9F7F5;          /* Warm soft white background */
+  --text-color: #2B2621;        /* Deep oak charcoal text */
+  --card-bg: #EAE3D5;           /* Light oak card base */
+  --border-color: #D9C3A5;       /* Warm sand border */
+  --accent-color: #A89276;       /* Oak accent */
+  --accent-light: #D9C3A5;       /* Oak light */
+  --accent-dark: #2B2621;        /* Dark brown text for contrast in light mode */
+  --card-face: #F4ECE0;          /* Translucent light card face */
+  --glass-bg: rgba(249, 247, 245, 0.8);
+}
+
+.dark {
+  --bg-color: #0F0E0D;          /* Deep charcoal ebony background */
+  --text-color: #F5F0E8;        /* Light cream text for high contrast */
+  --card-bg: #1A1816;           /* Dark charcoal-wood base */
+  --border-color: #2B2621;       /* Medium dark oak accent border */
+  --accent-color: #A89276;       /* Oak accent */
+  --accent-light: #D9C3A5;       /* Warm golden oak highlight */
+  --accent-dark: #F5F0E8;        /* Light cream text */
+  --card-face: #161413;          /* Translucent dark card face */
+  --glass-bg: rgba(22, 20, 19, 0.75);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Lora', Georgia, serif;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--accent-dark);
+    transition: color 0.4s ease;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--card-face);
+  transition: background-color 0.4s ease;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+  transition: background-color 0.4s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* Custom styles for luxury styling */
+.wood-gradient {
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--border-color) 100%);
+  transition: background 0.4s ease;
+}
+
+.wood-gradient-soft {
+  background: linear-gradient(180deg, var(--bg-color) 0%, var(--card-bg) 100%);
+  transition: background 0.4s ease;
+}
+
+.glass-morphic {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: background-color 0.4s ease;
+}
+
+.glow-hover {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 35px rgba(168, 146, 118, 0.15);
+}
+
+/* Mouse-following glow style */
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(168, 146, 118, 0.08), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glow-effect:hover::before {
+  opacity: 1;
+}
+
+/* Magnetic element placeholder transitions */
+.magnetic {
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Custom active focus states */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid #A89276;
+  outline-offset: 4px;
+}
+
+/* Ripple animations */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(168, 146, 118, 0.2);
+  transform: scale(0);
+  animation: ripple-effect 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple-effect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Shining background style using user gradient */
+.shining-bg {
+  position: fixed;
+  inset: 0;
+  background-image: url('/bg-gradient.png');
+  background-size: cover;
+  background-position: center;
+  z-index: -20;
+  opacity: 0.16; /* Kept very soft so the page is highly legible and premium */
+  pointer-events: none;
+  animation: pan-shining 95s infinite alternate ease-in-out; /* Slower 95s animation */
+  mix-blend-mode: multiply; /* Perfect blend for light background */
+  filter: brightness(1.05) saturate(0.65) contrast(0.9);
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+/* Dark mode overrides for background blending */
+.dark .shining-bg {
+  opacity: 0.11;
+  mix-blend-mode: screen; /* Perfect blend for dark background */
+  filter: brightness(0.3) saturate(0.8) contrast(1.1);
+}
+
+@keyframes pan-shining {
+  0% {
+    transform: scale(1) translate(0px, 0px) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) translate(1.5%, -1.5%) rotate(0.5deg);
+  }
+  100% {
+    transform: scale(1.05) translate(-1%, 1%) rotate(-0.5deg);
+  }
+}
