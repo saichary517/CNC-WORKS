@@ -6,9 +6,7 @@ function FloatingModel() {
   const groupRef = useRef();
 
   // Load the GLB model
-  const { scene } = useGLTF(
-    "https://drive.google.com/uc?export=download&id=1PDx4Vtw4YF6XfduRwwS6nKZ6sPAC9nCeR"
-  );
+  const { scene } = useGLTF("/models/model.glb");
   // Traverse the scene to optimize materials for a sleek, visible, metal-finished design
   useEffect(() => {
     scene.traverse((child) => {
