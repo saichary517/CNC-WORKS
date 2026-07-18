@@ -98,8 +98,8 @@ function FloatingModel() {
     const t = state.clock.getElapsedTime();
     if (groupRef.current) {
       groupRef.current.position.y = Math.sin(t * 0.8) * 0.12;
-      groupRef.current.rotation.y = Math.sin(t * 0.2) * 0.05;
-      groupRef.current.rotation.z = Math.cos(t * 0.4) * 0.03;
+      groupRef.current.rotation.y = Math.sin(t * 0.8) * 0.08;
+      groupRef.current.rotation.z = Math.cos(t * 0.4) * 0.05;
     }
   });
 
@@ -115,7 +115,7 @@ function FloatingModel() {
 
 export const HeroScene = () => {
   return (
-    <div className="w-full h-[380px] sm:h-[450px] md:h-[500px] lg:h-[550px] flex items-center justify-center select-none relative">
+    <div className="w-full h-[400px] sm:h-[470px] md:h-[520px] lg:h-[570px] flex items-center justify-center select-none relative">
       <Canvas
         camera={{ position: [0, 1.5, 6], fov: 38 }}
         gl={{ antialias: true, alpha: true }}
