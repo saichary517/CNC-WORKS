@@ -6,8 +6,9 @@ function FloatingModel() {
   const groupRef = useRef();
 
   // Load the GLB model
-  const { scene } = useGLTF("/models/model.glb", "https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
-
+  const { scene } = useGLTF(
+    "https://drive.google.com/uc?export=download&id=1PDx4Vtw4YF6XfduRwwS6nKZ6sPAC9nCeR"
+  );
   // Traverse the scene to optimize materials for a sleek, visible, metal-finished design
   useEffect(() => {
     scene.traverse((child) => {
@@ -18,7 +19,7 @@ function FloatingModel() {
           // Enhance the material PBR properties
           child.material.roughness = 0.35;
           child.material.metalness = 0.55;
-          
+
           // Inject custom shader to color different portions of the single unified mesh
           child.material.onBeforeCompile = (shader) => {
             // Vertex Shader: Pass local position coordinate to fragment shader
@@ -32,7 +33,7 @@ function FloatingModel() {
               `#include <begin_vertex>
                vLocalPosition = position;`
             );
-            
+
             // Fragment Shader: Calculate and assign colors dynamically based on geometry coordinates
             shader.fragmentShader = shader.fragmentShader.replace(
               '#include <common>',
@@ -125,12 +126,12 @@ export const HeroScene = () => {
       >
         {/* Lights for premium rendering and depth */}
         <ambientLight intensity={0.4} />
-        <directionalLight 
-          position={[10, 15, 10]} 
-          intensity={1.5} 
-          castShadow 
-          shadow-mapSize-width={1024} 
-          shadow-mapSize-height={1024} 
+        <directionalLight
+          position={[10, 15, 10]}
+          intensity={1.5}
+          castShadow
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
         />
         <directionalLight position={[-10, 10, -5]} intensity={0.5} color="#E8F0F5" />
         <pointLight position={[0, -2, 3]} intensity={0.8} color="#D4C5A9" />
@@ -140,22 +141,22 @@ export const HeroScene = () => {
           <Center>
             <FloatingModel />
           </Center>
-          
+
           {/* Environment preset provides realistic reflections on metallic surfaces */}
           <Environment preset="city" />
-          
+
           {/* Ground soft shadows for depth */}
-          <ContactShadows 
-            position={[0, -1.8, 0]} 
-            opacity={0.5} 
-            scale={8} 
-            blur={2.4} 
-            far={3.0} 
+          <ContactShadows
+            position={[0, -1.8, 0]}
+            opacity={0.5}
+            scale={8}
+            blur={2.4}
+            far={3.0}
           />
         </Suspense>
 
         {/* Interactive camera controls */}
-        <OrbitControls 
+        <OrbitControls
           enableZoom={false} // Prevent page scroll hijack
           autoRotate={true} // Slowly rotate camera around model
           autoRotateSpeed={0.5} // Ultra-gentle spin
