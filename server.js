@@ -21,7 +21,7 @@ if (!fs.existsSync(PDFS_DIR)) {
 }
 
 // Endpoint to list all folders and count of PDFs inside each
-app.get('/api/folders', (req, res) => {
+app.get(['/api/folders', '/api/folders.json'], (req, res) => {
   try {
     if (!fs.existsSync(PDFS_DIR)) {
       return res.json([]);
@@ -52,9 +52,12 @@ app.get('/api/folders', (req, res) => {
 });
 
 // Endpoint to list all PDFs in a specific folder
-app.get('/api/folders/:folderName', (req, res) => {
+app.get(['/api/folders/:folderName', '/api/folders/:folderName.json'], (req, res) => {
   try {
-    const { folderName } = req.params;
+    let { folderName } = req.params;
+    if (folderName.endsWith('.json')) {
+      folderName = folderName.slice(0, -5);
+    }
     const folderPath = path.join(PDFS_DIR, folderName);
 
     // Security check to prevent directory traversal

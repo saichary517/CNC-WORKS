@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/folders", "destination": "/api/folders.json" },
+    { "source": "/api/folders/:folderName", "destination": "/api/folders/:folderName.json" },
+    { "source": "/((?!api/|pdfs/|models/|assets/).*)", "destination": "/index.html" }
+  ]
+}

@@ -6,7 +6,7 @@ function FloatingModel() {
   const groupRef = useRef();
 
   // Load the GLB model
-  const { scene } = useGLTF("/models/model.glb");
+  const { scene } = useGLTF("/models/model.glb", "https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
 
   // Traverse the scene to optimize materials for a sleek, visible, metal-finished design
   useEffect(() => {
