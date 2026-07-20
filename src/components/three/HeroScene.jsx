@@ -38,7 +38,7 @@ function FloatingModel() {
                 r = 0.48; g = 0.12; b = 0.02;
               } else {
                 // Bed surface -> Deep Obsidian Charcoal
-                r = 0.28; g = 0.08; b = 0.08;
+                r = 0.08; g = 0.08; b = 0.08;
               }
             } else if (y >= 0.05 && y < 0.28) {
               // Gantry level
