@@ -138,9 +138,11 @@ export const HeroScene = () => {
           />
         </Suspense>
 
-        {/* Interactive camera controls */}
+        {/* Interactive camera controls with bounded zoom */}
         <OrbitControls
-          enableZoom={false}
+          enableZoom={true}
+          minDistance={3.5}
+          maxDistance={7.5}
           autoRotate={true}
           autoRotateSpeed={0.6}
           enableDamping={true}
