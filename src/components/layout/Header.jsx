@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Phone } from 'lucide-react';
 import { siteConfig } from '../../config/siteConfig';
 import { ContactDrawer } from '../ui/ContactDrawer';
 
@@ -94,6 +94,15 @@ export const Header = () => {
                 </Link>
               );
             })}
+
+            <a
+              href={`tel:${siteConfig.contact.phone.replace(/\s+/g, '')}`}
+              className="flex items-center space-x-1.5 font-sans text-xs tracking-wider uppercase font-semibold text-oak-accent hover:text-oak-dark transition-colors px-3 py-1 rounded-full border border-warm-beige/50 bg-warm-cream/30 hover:border-oak-light shadow-sm"
+              title={`Call ${siteConfig.contact.phone}`}
+            >
+              <Phone className="w-3.5 h-3.5 text-oak-light" />
+              <span>{siteConfig.contact.phone}</span>
+            </a>
             
             <button
               onClick={() => setIsContactOpen(true)}
@@ -115,6 +124,14 @@ export const Header = () => {
 
           {/* Mobile Navigation Toggle */}
           <div className="flex items-center space-x-3 lg:hidden">
+            <a
+              href={`tel:${siteConfig.contact.phone.replace(/\s+/g, '')}`}
+              className="p-1.5 rounded-full text-oak-accent/70 hover:text-oak-dark outline-none focus-visible:ring-1 focus-visible:ring-oak-light cursor-pointer flex items-center space-x-1 text-xs font-semibold"
+              title={`Call ${siteConfig.contact.phone}`}
+              aria-label="Call Us"
+            >
+              <Phone className="w-4 h-4 text-oak-light" />
+            </a>
             <button 
               onClick={toggleTheme}
               className="p-1.5 rounded-full text-oak-accent/60 outline-none focus-visible:ring-1 focus-visible:ring-oak-light cursor-pointer"
@@ -153,6 +170,13 @@ export const Header = () => {
                 </Link>
               );
             })}
+            <a
+              href={`tel:${siteConfig.contact.phone.replace(/\s+/g, '')}`}
+              className="flex items-center space-x-2 font-sans text-sm tracking-wider uppercase font-semibold py-2 text-oak-accent/90 border-b border-warm-beige/10"
+            >
+              <Phone className="w-4 h-4 text-oak-light" />
+              <span>Contact: {siteConfig.contact.phone}</span>
+            </a>
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);

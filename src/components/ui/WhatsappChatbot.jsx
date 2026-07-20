@@ -58,7 +58,7 @@ export const WhatsappChatbot = () => {
               </div>
               <div className="text-left">
                 <h6 className="text-[11px] font-bold uppercase tracking-wider text-emerald-500">
-                  Sri Sai Maruti Support
+                  Sri Sai Maruthi Support
                 </h6>
                 <p className="text-xs text-oak-accent/90 mt-1 leading-relaxed font-light">
                   Hi there! Looking for custom wood carving or jali cutting designs? Chat with us directly to send your inquiry!

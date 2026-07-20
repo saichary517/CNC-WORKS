@@ -1,11 +1,12 @@
 export const siteConfig = {
-  name: "Sri Sai Maruti Wood Carving & Jali Cutting Works",
-  shortName: "Sri Sai Maruti",
+  name: "Sri Sai Maruthi Wood Carving & Jali Cutting Works",
+  shortName: "Sri Sai Maruthi",
   tagline: "All Types of Wooden Doors Carving, Elevation and Jali Cutting Works",
   address: "near Singireddy Swimming Pool, opposite NTPC Road, Annojiguda, Ghatkesar",
   contact: {
-    email: "srisaimarutiwoodworks@gmail.com",
+    email: "srisaimaruthiwoodworks@gmail.com",
     phone: "+91 85558 20926",
+    rawPhone: "8555820926",
     whatsapp: "https://wa.me/918555820926?text=Hi!%20I%20saw%20your%20designs%20on%20your%20website%20and%20wanted%20to%20enquire%20about%20wood%20carving%20and%20jali%20cutting%20works.",
   },
   social: {

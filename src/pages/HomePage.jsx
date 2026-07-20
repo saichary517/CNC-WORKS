@@ -8,6 +8,8 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { FloatingBlobs } from '../components/ui/FloatingBlobs';
 import { PageTransition } from '../components/layout/PageTransition';
 import { motion } from 'framer-motion';
+import { Phone } from 'lucide-react';
+import { siteConfig } from '../config/siteConfig';
 
 const LazyHeroScene = React.lazy(() => import('../components/three/HeroScene'));
 
@@ -74,6 +76,21 @@ export const HomePage = () => {
             >
               Browse and view high-quality 2D vector plans and 3D volume concepts directly in your browser. Auto-detects additions instantly.
             </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="pt-1"
+            >
+              <a
+                href={`tel:${siteConfig.contact.phone.replace(/\s+/g, '')}`}
+                className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-warm-cream/80 border border-warm-beige/60 text-oak-dark font-sans text-xs md:text-sm font-semibold tracking-wide hover:bg-oak-accent hover:text-white transition-all shadow-sm group"
+              >
+                <Phone className="w-4 h-4 text-oak-light group-hover:text-white transition-colors" />
+                <span>Contact: {siteConfig.contact.phone}</span>
+              </a>
+            </motion.div>
           </div>
           
           {/* Lazy loaded 3D Canvas side */}
