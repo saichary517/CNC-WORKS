@@ -8,7 +8,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { FloatingBlobs } from '../components/ui/FloatingBlobs';
 import { PageTransition } from '../components/layout/PageTransition';
 import { motion } from 'framer-motion';
-import { Phone } from 'lucide-react';
+import { Phone, ArrowDown } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
 
 const LazyHeroScene = React.lazy(() => import('../components/three/HeroScene'));
@@ -17,6 +17,13 @@ export const HomePage = () => {
   const { folders, loading, error } = useFolders();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const scrollToDesigns = () => {
+    const el = document.getElementById('designs-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   // Filter folders by search query
   const searchedFolders = useSearch(folders, searchQuery, ['name']);
@@ -57,7 +64,7 @@ export const HomePage = () => {
             >
               Premium Architectural Catalog
             </motion.span>
-            
+
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -67,7 +74,7 @@ export const HomePage = () => {
               Simplicity in <br />
               <span className="font-semibold text-oak-dark italic">Architectural</span> Design.
             </motion.h1>
-            
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -81,18 +88,26 @@ export const HomePage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="pt-1"
+              className="flex flex-wrap items-center gap-3 pt-1"
             >
               <a
                 href={`tel:${siteConfig.contact.phone.replace(/\s+/g, '')}`}
-                className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-warm-cream/80 border border-warm-beige/60 text-oak-dark font-sans text-xs md:text-sm font-semibold tracking-wide hover:bg-oak-accent hover:text-white transition-all shadow-sm group"
+                className="inline-flex items-center space-x-2 px-4 py-2 rounded-full border border-warm-beige/60 bg-warm-cream/80 text-oak-dark font-sans text-xs md:text-sm font-semibold tracking-wide hover:bg-oak-accent hover:text-white transition-all shadow-sm group"
               >
                 <Phone className="w-4 h-4 text-oak-light group-hover:text-white transition-colors" />
                 <span>Contact: {siteConfig.contact.phone}</span>
               </a>
+
+              <button
+                onClick={scrollToDesigns}
+                className="inline-flex items-center space-x-2 px-4 py-2 rounded-full border border-warm-beige/60 bg-warm-cream/80 text-oak-dark font-sans text-xs md:text-sm font-semibold tracking-wide hover:bg-oak-accent hover:text-white transition-all shadow-sm group cursor-pointer"
+              >
+                <span>Designs</span>
+                <ArrowDown className="w-4 h-4 text-oak-light group-hover:text-white transition-colors animate-bounce" />
+              </button>
             </motion.div>
           </div>
-          
+
           {/* Lazy loaded 3D Canvas side */}
           <div className="lg:col-span-5 w-full flex items-center justify-center">
             <React.Suspense fallback={<div className="w-full h-[300px] bg-warm-cream/10 rounded-2xl animate-pulse" />}>
@@ -102,7 +117,7 @@ export const HomePage = () => {
         </section>
 
         {/* Navigation, Search and Filter Controls */}
-        <section className="max-w-7xl mx-auto px-6 mb-10 space-y-5">
+        <section id="designs-section" className="max-w-7xl mx-auto px-6 mb-10 space-y-5 scroll-mt-20">
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
           {/* Categories Filter Pills */}
@@ -112,11 +127,10 @@ export const HomePage = () => {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-1 rounded-full text-xs font-sans tracking-wide transition-all duration-300 outline-none border cursor-pointer ${
-                    selectedCategory === category
+                  className={`px-4 py-1 rounded-full text-xs font-sans tracking-wide transition-all duration-300 outline-none border cursor-pointer ${selectedCategory === category
                       ? 'bg-oak-accent border-oak-accent text-white shadow-sm font-semibold'
                       : 'bg-warm-softWhite/70 border-warm-beige/40 text-oak-accent hover:border-oak-light hover:text-oak-dark'
-                  }`}
+                    }`}
                 >
                   {category}
                 </button>
@@ -134,9 +148,9 @@ export const HomePage = () => {
               <p className="text-red-500 font-sans text-sm font-semibold">{error}</p>
             </div>
           ) : filteredFolders.length === 0 ? (
-            <EmptyState 
-              title="No Folders Found" 
-              description={searchQuery ? "No folders match your search query." : "Drag some folders containing designs to public/pdfs/."} 
+            <EmptyState
+              title="No Folders Found"
+              description={searchQuery ? "No folders match your search query." : "Drag some folders containing designs to public/pdfs/."}
             />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

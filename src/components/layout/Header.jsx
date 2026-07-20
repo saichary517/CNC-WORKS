@@ -51,9 +51,9 @@ export const Header = () => {
 
   return (
     <>
-      <header className={`sticky top-0 z-40 w-full transition-all duration-300 h-16 ${
+      <header className={`sticky top-0 z-50 w-full transition-all duration-300 h-16 ${
         scrolled || isMobileMenuOpen
-          ? 'bg-warm-white/90 backdrop-blur-md shadow-premium-card border-b border-warm-beige/30' 
+          ? 'bg-warm-white dark:bg-[#0F0E0D] shadow-premium-card border-b border-warm-beige/30 dark:border-warm-beige/10' 
           : 'bg-transparent border-b border-transparent'
       }`}>
         <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
@@ -152,7 +152,7 @@ export const Header = () => {
 
         {/* Mobile Dropdown Panel */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-16 left-0 w-full bg-warm-white/95 backdrop-blur-md shadow-premium-card border-b border-warm-beige/35 py-6 px-6 space-y-4 flex flex-col z-30">
+          <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-warm-white dark:bg-[#0F0E0D] border-b border-warm-beige/35 py-8 px-6 space-y-5 flex flex-col z-50 shadow-2xl overflow-y-auto">
             {navLinks.map((link) => {
               const isActive = link.path === '/' 
                 ? location.pathname === '/' 
@@ -162,8 +162,10 @@ export const Header = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`font-sans text-sm tracking-wider uppercase font-semibold py-2 border-b border-warm-beige/10 ${
-                    isActive ? 'text-oak-dark pl-2 border-l-2 border-oak-light' : 'text-oak-accent/70'
+                  className={`font-sans text-sm tracking-wider uppercase font-semibold py-3 border-b border-warm-beige/20 transition-colors ${
+                    isActive 
+                      ? 'text-oak-dark dark:text-white pl-2 border-l-2 border-oak-light font-bold' 
+                      : 'text-oak-accent/80 dark:text-warm-beige/80 hover:text-oak-dark dark:hover:text-white'
                   }`}
                 >
                   {link.name}
@@ -172,7 +174,7 @@ export const Header = () => {
             })}
             <a
               href={`tel:${siteConfig.contact.phone.replace(/\s+/g, '')}`}
-              className="flex items-center space-x-2 font-sans text-sm tracking-wider uppercase font-semibold py-2 text-oak-accent/90 border-b border-warm-beige/10"
+              className="flex items-center space-x-2 font-sans text-sm tracking-wider uppercase font-semibold py-3 border-b border-warm-beige/20 text-oak-accent/80 dark:text-warm-beige/80 hover:text-oak-dark dark:hover:text-white transition-colors"
             >
               <Phone className="w-4 h-4 text-oak-light" />
               <span>Contact: {siteConfig.contact.phone}</span>
@@ -182,7 +184,7 @@ export const Header = () => {
                 setIsMobileMenuOpen(false);
                 setIsContactOpen(true);
               }}
-              className="font-sans text-sm tracking-wider uppercase font-semibold text-left py-2 text-oak-accent/70 cursor-pointer"
+              className="font-sans text-sm tracking-wider uppercase font-semibold text-left py-3 text-oak-accent/80 dark:text-warm-beige/80 hover:text-oak-dark dark:hover:text-white transition-colors cursor-pointer"
             >
               Contact Details
             </button>

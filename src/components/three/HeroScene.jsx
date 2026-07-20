@@ -1,92 +1,82 @@
 import React, { useRef, Suspense, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, OrbitControls, Environment, ContactShadows, Center } from "@react-three/drei";
+import * as THREE from "three";
 
 function FloatingModel() {
   const groupRef = useRef();
 
-  // Load the GLB model
+  // Load the original GLB model
   const { scene } = useGLTF("/models/model.glb");
-  // Traverse the scene to optimize materials for a sleek, visible, metal-finished design
+
   useEffect(() => {
     scene.traverse((child) => {
-      if (child.isMesh) {
+      if (child.isMesh && child.geometry) {
         child.castShadow = true;
         child.receiveShadow = true;
-        if (child.material) {
-          // Enhance the material PBR properties
-          child.material.roughness = 0.35;
-          child.material.metalness = 0.55;
 
-          // Inject custom shader to color different portions of the single unified mesh
-          child.material.onBeforeCompile = (shader) => {
-            // Vertex Shader: Pass local position coordinate to fragment shader
-            shader.vertexShader = shader.vertexShader.replace(
-              '#include <common>',
-              `#include <common>
-               varying vec3 vLocalPosition;`
-            );
-            shader.vertexShader = shader.vertexShader.replace(
-              '#include <begin_vertex>',
-              `#include <begin_vertex>
-               vLocalPosition = position;`
-            );
+        const geometry = child.geometry;
+        const posAttr = geometry.attributes.position;
+        if (posAttr && !geometry.attributes.color) {
+          const count = posAttr.count;
+          const colors = new Float32Array(count * 3);
 
-            // Fragment Shader: Calculate and assign colors dynamically based on geometry coordinates
-            shader.fragmentShader = shader.fragmentShader.replace(
-              '#include <common>',
-              `#include <common>
-               varying vec3 vLocalPosition;`
-            );
-            shader.fragmentShader = shader.fragmentShader.replace(
-              'vec4 diffuseColor = vec4( diffuse, opacity );',
-              `
-              vec3 finalColor = vec3(0.88, 0.88, 0.88); // Default white/light gray
-              
-              float x = vLocalPosition.x;
-              float y = vLocalPosition.y;
-              float z = vLocalPosition.z;
-              
-              if (y < -0.18) {
-                // Bottom chassis & base frame -> Shusa Vibrant Orange
-                finalColor = vec3(0.92, 0.22, 0.05); // #EB380D
-              } else if (y >= -0.18 && y < 0.05) {
-                // Bed and side rails
-                if (abs(x) > 0.82) {
-                  // Outer side rails/supports -> Orange-red
-                  finalColor = vec3(0.92, 0.22, 0.05); 
+          for (let i = 0; i < count; i++) {
+            const x = posAttr.getX(i);
+            const y = posAttr.getY(i);
+            const z = posAttr.getZ(i);
+
+            let r = 0.32, g = 0.32, b = 0.32; // Default dark ash/gunmetal gray
+
+            if (y < -0.18) {
+              // Base chassis & legs -> Rich Dark Burnt Orange (#7A1F05)
+              r = 0.48; g = 0.12; b = 0.02;
+            } else if (y >= -0.18 && y < 0.05) {
+              // Bed level
+              if (Math.abs(x) > 0.80) {
+                // Outer side supports & upright ears -> Rich Dark Burnt Orange
+                r = 0.48; g = 0.12; b = 0.02;
+              } else {
+                // Bed surface -> Deep Obsidian Charcoal
+                r = 0.28; g = 0.08; b = 0.08;
+              }
+            } else if (y >= 0.05 && y < 0.28) {
+              // Gantry level
+              if (Math.abs(z) < 0.35) {
+                // Bellows & carriage backing -> Deep Obsidian Charcoal
+                r = 0.06; g = 0.06; b = 0.06;
+              } else {
+                // Side upright ears -> Dark Ash
+                r = 0.32; g = 0.32; b = 0.32;
+              }
+            } else {
+              // Top carriage / Spindle (y >= 0.28)
+              if (Math.abs(x) < 0.15) {
+                if (Math.abs(x) < 0.035) {
+                  // Spindle center stripe -> Rich Dark Burnt Orange
+                  r = 0.48; g = 0.12; b = 0.02;
                 } else {
-                  // Bed surface -> Dark carbon gray
-                  finalColor = vec3(0.18, 0.18, 0.18); 
-                }
-              } else if (y >= 0.05 && y < 0.28) {
-                // Gantry crossbeam level
-                if (abs(z) < 0.35) {
-                  // Gantry bellows & carriage backing -> Matte Black
-                  finalColor = vec3(0.12, 0.12, 0.12);
-                } else {
-                  // Gantry side upright ears -> White/Light Gray
-                  finalColor = vec3(0.88, 0.88, 0.88);
+                  // Spindle casing -> Dark Ash
+                  r = 0.32; g = 0.32; b = 0.32;
                 }
               } else {
-                // Z-axis spindle and top carriage (y >= 0.28)
-                if (abs(x) < 0.15) {
-                  // Spindle casing -> White with vertical orange stripe in center
-                  if (abs(x) < 0.035) {
-                    finalColor = vec3(0.92, 0.22, 0.05); // Orange vertical stripe
-                  } else {
-                    finalColor = vec3(0.88, 0.88, 0.88); // White spindle casing
-                  }
-                } else {
-                  // Top cabling, motor caps, structure -> Black/Gray/White
-                  finalColor = vec3(0.2, 0.2, 0.2); // Dark details
-                }
+                // Top motor caps & cabling -> Deep Obsidian Charcoal
+                r = 0.10; g = 0.10; b = 0.10;
               }
-              
-              vec4 diffuseColor = vec4( finalColor, opacity );
-              `
-            );
-          };
+            }
+
+            colors[i * 3] = r;
+            colors[i * 3 + 1] = g;
+            colors[i * 3 + 2] = b;
+          }
+
+          geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        }
+
+        if (child.material) {
+          child.material.vertexColors = true;
+          child.material.roughness = 0.35;
+          child.material.metalness = 0.45;
           child.material.needsUpdate = true;
         }
       }
@@ -97,42 +87,37 @@ function FloatingModel() {
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (groupRef.current) {
-      groupRef.current.position.y = Math.sin(t * 0.8) * 0.12;
-      groupRef.current.rotation.y = Math.sin(t * 0.8) * 0.08;
-      groupRef.current.rotation.z = Math.cos(t * 0.4) * 0.05;
+      groupRef.current.position.y = Math.sin(t * 0.8) * 0.08;
+      groupRef.current.rotation.y = Math.sin(t * 0.6) * 0.05;
     }
   });
 
   return (
     <group ref={groupRef}>
-      <primitive
-        object={scene}
-        scale={1.7} // Center will auto-contain and size it. Reducing to 1.7 makes it a bit shorter/better proportioned.
-      />
+      <primitive object={scene} scale={1.9} />
     </group>
   );
 }
 
 export const HeroScene = () => {
   return (
-    <div className="w-full h-[400px] sm:h-[470px] md:h-[520px] lg:h-[570px] flex items-center justify-center select-none relative">
+    <div className="w-full h-[360px] sm:h-[440px] md:h-[500px] lg:h-[550px] flex items-center justify-center select-none relative overflow-visible">
       <Canvas
-        camera={{ position: [0, 1.5, 6], fov: 38 }}
-        gl={{ antialias: true, alpha: true }}
-        dpr={[1, 1.5]} // Performance optimized
+        camera={{ position: [0, 1.2, 6.2], fov: 40 }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        dpr={[1, 2]} // High DPI for crystal clear rendering
         shadows
       >
-        {/* Lights for premium rendering and depth */}
-        <ambientLight intensity={0.4} />
+        {/* Lights for depth and reflections */}
+        <ambientLight intensity={0.65} />
         <directionalLight
           position={[10, 15, 10]}
-          intensity={1.5}
+          intensity={1.4}
           castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
         />
-        <directionalLight position={[-10, 10, -5]} intensity={0.5} color="#E8F0F5" />
-        <pointLight position={[0, -2, 3]} intensity={0.8} color="#D4C5A9" />
+        <directionalLight position={[-10, 10, -5]} intensity={0.5} />
 
         {/* 3D Model with auto centering */}
         <Suspense fallback={null}>
@@ -140,29 +125,29 @@ export const HeroScene = () => {
             <FloatingModel />
           </Center>
 
-          {/* Environment preset provides realistic reflections on metallic surfaces */}
+          {/* Environment preset for realistic reflections */}
           <Environment preset="city" />
 
-          {/* Ground soft shadows for depth */}
+          {/* Ground soft shadows */}
           <ContactShadows
-            position={[0, -1.8, 0]}
-            opacity={0.5}
-            scale={8}
-            blur={2.4}
+            position={[0, -1.3, 0]}
+            opacity={0.45}
+            scale={7.5}
+            blur={2.2}
             far={3.0}
           />
         </Suspense>
 
         {/* Interactive camera controls */}
         <OrbitControls
-          enableZoom={false} // Prevent page scroll hijack
-          autoRotate={true} // Slowly rotate camera around model
-          autoRotateSpeed={0.5} // Ultra-gentle spin
-          enableDamping={true} // Smooth drag inertia
+          enableZoom={false}
+          autoRotate={true}
+          autoRotateSpeed={0.6}
+          enableDamping={true}
           dampingFactor={0.05}
-          enablePan={false} // Keep it centered
-          minPolarAngle={Math.PI / 4} // Limit top view angle
-          maxPolarAngle={Math.PI / 1.7} // Limit bottom view angle to avoid clipping under the model
+          enablePan={false}
+          minPolarAngle={Math.PI / 4}
+          maxPolarAngle={Math.PI / 1.7}
         />
       </Canvas>
     </div>
